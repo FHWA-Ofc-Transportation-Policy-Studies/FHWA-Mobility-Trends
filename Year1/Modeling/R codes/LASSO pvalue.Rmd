@@ -1,0 +1,63 @@
+---
+title: "LASSO p-value"
+output: html_document
+date: "2023-01-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Set up 
+```{r Set up }
+setwd("/Users/csuffaculty/Desktop/FHWA")
+
+#read the dataset
+dat<-read.csv("Data20221210.csv", header=TRUE)
+```
+
+## VMT
+```{r VMT}
+VMT.dat<-dat[,colSums(is.na(dat))==0]
+VMT.dat.s<-scale(VMT.dat)
+VMT.dat.s<-VMT.dat.s[,c(2,5,15,18:19,27:28,31,33,36,37)]
+VMT.dat.s<-as.data.frame(VMT.dat.s)
+
+## Select LASSO model with largeest R^2 from each trend
+miles<-c("TotLaneMiles", "TotLocToCollMiles", "TotalArtToFwyMiles")
+transit<-c("TransitDRM","TransitPMT","TransitUPT")
+ev<-c("RegisteredBEVCarsMillions","EVPrivateandPublicChargingStationLocations")
+VMT.mod<-matrix(,18,7);m=1
+lambdas=10^seq(5,-5,by=-.1)
+#library(glmnet)
+for(i in 1:3){
+  for(j in 1:3){
+    for(k in 1:2){
+      VMT.dat.sub<-VMT.dat.s[,c("VMT","Unemployment.Rate.1", miles[i],transit[j],ev[k],"populationTelework")]
+      cv.lasso<-cv.glmnet(as.matrix(VMT.dat.sub[,-1]), VMT.dat.sub[,1],alpha=1,type="deviance", family="gaussian", standardize=TRUE, nfolds=20, lambda=lambdas)
+      optimal.lambda<- cv.lasso$lambda.min
+      lambda.rsq<-cbind(cv.lasso$lambda,lasso.mod$dev.ratio)
+      r2<-lambda.rsq[lambda.rsq[,1]==optimal.lambda][2]
+      VMT.mod[m,1]<-colnames(VMT.dat.sub)[1]; VMT.mod[m,2]<-colnames(VMT.dat.sub)[2]; VMT.mod[m,3]<-colnames(VMT.dat.sub)[3]
+      VMT.mod[m,4]<-colnames(VMT.dat.sub)[4]; VMT.mod[m,5]<-colnames(VMT.dat.sub)[5]; VMT.mod[m,6]<-colnames(VMT.dat.sub)[6]
+      VMT.mod[m,7]<-r2
+      m<-m+1
+    }
+  }
+}
+
+#Export the file
+#write.csv(VMT.mod, 'VMT.r2.mod.csv')
+
+#Bootstrap  p-values
+#library(glmnetSE)
+#Builds a LASSO, Ridge, or Elastic Net model with glmnet or cv.glmnet with bootstrap inference statistics (SE, CI, and p-value) 
+#for selected coefficients with no shrinkage applied for them.
+summary(glmnetSE(data=VMT.dat.s, 
+                 cf.no.shrnkg = c("Unemployment.Rate.1","TotalArtToFwyMiles","TransitDRM","RegisteredBEVCarsMillions","populationTelework"), 
+                 alpha=1,r=500, method="none",seed = 1234, ncore = 1))
+
+#Compare with multiple linear regression
+summary(lm(VMT.dat.s[,1]~VMT.dat.s[,"Unemployment.Rate.1"]+VMT.dat.s[,"TotalArtToFwyMiles"]+VMT.dat.s[,"TransitDRM"]+VMT.dat.s[,"RegisteredBEVCarsMillions"]+VMT.dat.s[,"populationTelework"]))
+
+```

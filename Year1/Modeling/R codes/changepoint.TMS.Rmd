@@ -1,0 +1,108 @@
+---
+title: "Changepoint Analysis TMS"
+output: html_document
+date: "2023-02-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## TMS Changepoint 
+```{r TMS  vs. Unemploymnet, echo=FALSE}
+setwd("/Users/csuffaculty/Desktop/FHWA")
+
+#read the dataset
+dat<-read.csv("Data20221210.csv", header=TRUE)
+library(ggplot2)
+library(segmented)
+
+#TMS.dat<-dat[,colSums(is.na(dat))==0]
+TMS.dat.sub<-dat[-c(1:4),c("year","TransitModeShare","Unemployment.Rate.1","TotalArtToFwyMiles","TransitUPT","RegisteredBEVCarsMillions","populationTelework")]
+TMS.dat.sub$TMS.1<-c(NA,TMS.dat.sub[1:15,"TransitModeShare"])
+plot.unemp<-ggplot(TMS.dat.sub, aes(x = Unemployment.Rate.1, y=TransitModeShare))+geom_point() #plot raw data
+lm.unemp<-lm(TransitModeShare ~ Unemployment.Rate.1, data=TMS.dat.sub) #fit linear model
+```
+```{r changepoint analysis, echo=FALSE}
+seg.unemp<-segmented(lm.unemp, seg.Z = ~ Unemployment.Rate.1)
+summary(seg.unemp)
+slope(seg.unemp)
+confint(seg.unemp)
+plot.segmented(seg.unemp, res=TRUE, col=2, xlab="Unemployment Rate", ylab="TMS", pch=16)
+unemp.fitted<-fitted(seg.unemp)
+unemp.model<-data.frame(Unemployment=TMS.dat.sub$Unemployment.Rate.1, TMS=unemp.fitted)
+#plot.unemp+geom_line(data = unemp.model, aes(x = Unemployment, y = TMS), colour="red")
+```
+
+
+```{r TMS vs. TotalArtToFwyMiles, echo=FALSE}
+plot.TotalArtToFwyMiles<-ggplot(TMS.dat.sub, aes(x = TotalArtToFwyMiles, y=TransitModeShare))+geom_point() #plot raw data
+lm.TotalArtToFwyMiles<-lm(TransitModeShare ~ TotalArtToFwyMiles, data=TMS.dat.sub) #fit linear model
+```
+
+```{r changepoint analysis TotalArtToFwyMiles, echo=FALSE}
+seg.TotalArtToFwyMiles<-segmented(lm.TotalArtToFwyMiles, seg.Z = ~ TotalArtToFwyMiles)
+summary(seg.TotalArtToFwyMiles)
+slope(seg.TotalArtToFwyMiles)
+confint(seg.TotalArtToFwyMiles)
+plot.segmented(seg.TotalArtToFwyMiles, res=TRUE, col=2, xlab="TotalArtToFwyMiles", ylab="TMS", pch=16)
+TotalArtToFwyMiles.fitted<-fitted(seg.TotalArtToFwyMiles)
+TotalArtToFwyMiles.model<-data.frame(TotalArtToFwyMiles=TMS.dat.sub$TotalArtToFwyMiles, TMS=TotalArtToFwyMiles.fitted)
+#plot.TotalArtToFwyMiles+geom_line(data = TotalArtToFwyMiles.model, aes(x = TotalArtToFwyMiles, y = TMS), colour="red")
+```
+
+
+
+
+```{r TMS vs. TransitUPT, echo=FALSE}
+plot.TransitUPT<-ggplot(TMS.dat.sub, aes(x = TransitUPT, y=TransitModeShare))+geom_point() #plot raw data
+lm.TransitUPT<-lm(TransitModeShare ~ TransitUPT, data=TMS.dat.sub) #fit linear model
+```
+
+```{r changepoint analysis TransitUPT, echo=FALSE}
+seg.TransitUPT<-segmented(lm.TransitUPT, seg.Z = ~ TransitUPT)
+summary(seg.TransitUPT)
+slope(seg.TransitUPT)
+confint(seg.TransitUPT)
+plot.segmented(seg.TransitUPT, res=TRUE, col=2, xlab="TransitUPT", ylab="TMS", pch=16)
+TransitUPT.fitted<-fitted(seg.TransitUPT)
+TransitUPT.model<-data.frame(TransitUPT=TMS.dat.sub$TransitUPT, TMS=TransitUPT.fitted)
+#plot.TransitUPT+geom_line(data = TransitUPT.model, aes(x = TransitUPT, y = TMS), colour="red")
+```
+
+
+
+```{r TMS vs. RegisteredBEVCarsMillions, echo=FALSE}
+plot.RegisteredBEVCarsMillions<-ggplot(TMS.dat.sub, aes(x = RegisteredBEVCarsMillions, y=TransitModeShare))+geom_point() #plot raw data
+lm.RegisteredBEVCarsMillions<-lm(TransitModeShare ~ RegisteredBEVCarsMillions, data=TMS.dat.sub) #fit linear model
+```
+
+```{r changepoint analysis RegisteredBEVCarsMillions, echo=FALSE}
+seg.RegisteredBEVCarsMillions<-segmented(lm.RegisteredBEVCarsMillions, seg.Z = ~ RegisteredBEVCarsMillions)
+summary(seg.RegisteredBEVCarsMillions)
+slope(seg.RegisteredBEVCarsMillions)
+confint(seg.RegisteredBEVCarsMillions)
+plot.segmented(seg.RegisteredBEVCarsMillions, res=TRUE, col=2, xlab="RegisteredBEVCarsMillions", ylab="TMS", pch=16)
+RegisteredBEVCarsMillions.fitted<-fitted(seg.RegisteredBEVCarsMillions)
+RegisteredBEVCarsMillions.model<-data.frame(RegisteredBEVCarsMillions=TMS.dat.sub$RegisteredBEVCarsMillions, TMS=RegisteredBEVCarsMillions.fitted)
+#plot.RegisteredBEVCarsMillions+geom_line(data = RegisteredBEVCarsMillions.model, aes(x = RegisteredBEVCarsMillions, y = TMS), colour="red")
+```
+
+
+
+```{r TMS vs. populationTelework, echo=FALSE}
+plot.populationTelework<-ggplot(TMS.dat.sub, aes(x = populationTelework, y=TransitModeShare))+geom_point() #plot raw data
+lm.populationTelework<-lm(TransitModeShare ~ populationTelework, data=TMS.dat.sub) #fit linear model
+```
+
+```{r changepoint analysis populationTelework, echo=FALSE}
+seg.populationTelework<-segmented(lm.populationTelework)
+summary(seg.populationTelework)
+slope(seg.populationTelework)
+confint(seg.populationTelework)
+plot.segmented(seg.populationTelework, res=TRUE, col=2, xlab="Population Telework", ylab="TMS", pch=16)
+populationTelework.fitted<-fitted(seg.populationTelework)
+populationTelework.model<-data.frame(populationTelework=TMS.dat.sub$populationTelework, TMS=populationTelework.fitted)
+#plot.populationTelework+geom_line(data = populationTelework.model, aes(x = populationTelework, y = TMS), colour="red")
+```
+
