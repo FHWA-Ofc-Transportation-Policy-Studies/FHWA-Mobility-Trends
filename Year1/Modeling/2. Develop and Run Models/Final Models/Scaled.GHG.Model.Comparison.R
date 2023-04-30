@@ -154,6 +154,6 @@ GHG.df <- data.frame(Models = (c('GHG - Linear Regression without GHG(t-1)','GHG
                                        DW.GHG.LM.Timeseries, DW.lasso.LASSO.timeseries, DW.ridge.timeseries
                      )))
 
-#output of VMT models as it relates to figure 7
+#output of VMT models as it relates to figure 3-2
 GHG.df
 
