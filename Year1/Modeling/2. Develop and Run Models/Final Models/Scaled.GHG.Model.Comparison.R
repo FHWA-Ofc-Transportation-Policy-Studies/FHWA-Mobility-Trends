@@ -4,7 +4,7 @@
 #Each model will be evaluated with and without time-series considerations (ie, time series models will include the 
 #performance metric lagged (t-1) within the model. )
 
-#The final results for each section will relate to figure 7 within the Trends Indicator Memorandum.
+#The final results for each section will relate to figure 3-2 within the Trends Indicator Memorandum.
 
 library(glmnet)
 library(glmnetSE)
