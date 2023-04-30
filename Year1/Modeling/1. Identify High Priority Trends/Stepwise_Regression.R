@@ -59,7 +59,7 @@ model = glm(y$VMT ~
             data=x, family=gaussian()); summary(model)
 
 #=============================
-#Ending coefficents of stepwise regresison. Related to Figure 3 in Trends Indiciator Memorandum
+#Ending coefficents of stepwise regresison. Related to Figure 1-2 in Trends Indiciator Memorandum
 VMT = lm (y$VMT ~ x$UnemploymentRate + x$PopDL + x$RegisterVeh + x$LaneMiles + x$TransitUPT, data = x); summary(VMT) 
 GHG = lm (y$GHG ~ x$CarSharingVeh + x$TransitUPT + x$UnemploymentRate, data = x); summary(GHG)
 TMS = lm (y$TransitModeShare ~ x$TransitUPT + x$CarSharingVeh + x$UnemploymentRate, data = x); summary(TMS)
