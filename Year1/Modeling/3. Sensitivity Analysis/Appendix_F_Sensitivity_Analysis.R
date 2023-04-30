@@ -1,4 +1,4 @@
-#This script creates the sensitivity analysis within Appendix F: Tables 35, 36, and 37
+#This script creates the sensitivity analysis within Appendix F
 
 #read the dataset
 dat<-read.csv("C:/Users/zapate/Documents/FHWA-Mobility-Trends-main/FHWA-Mobility-Trends-main/Year1/Modeling/Data/Data20221210.csv", header=TRUE)
