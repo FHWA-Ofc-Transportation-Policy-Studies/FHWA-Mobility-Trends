@@ -1,7 +1,7 @@
 
 #This script creates the TMS 1.0 Model, which encompasses:
-#TMS Scaled Appendix D: Table 32, Table 33, Figure 23, Table 34 of the Trends Indicator Report
-#TMS Unscaled, Step 3: Table 10, Table 11, Figure 10, and Table 12 of the Trends Indicator Report
+#TMS Scaled Appendix D: Table D-1, Table D-2, Figure D-1, Table D-3 of the Trends Indicator Report
+#TMS Unscaled, Step 3: Table 3-8, Table 3-9, Figure 3-5, and Table 3-10 of the Trends Indicator Report
 
 library(glmnet)
 library(glmnetSE)
@@ -58,7 +58,7 @@ hi.2<--0.2165824+2.201*sqrt(MSE.in.TMS.lasso.timeseries*(1+as.matrix(x1) %*% sol
 scaled_lo<-c(lo.1,lo.2); scaled_hi<-c(hi.1,hi.2)
 
 
-#Scaled Model Summary - Appendix D Table 32
+#Scaled Model Summary - Table D-1
 model_summary <- data.frame(Model = (c('LASSO Regression, w/ Timeseries')),
                             R2 = (c(r2)),
                             MAE = (c(MAE.out.TMS.lasso.timeseries)),
@@ -67,7 +67,7 @@ model_summary <- data.frame(Model = (c('LASSO Regression, w/ Timeseries')),
 model_summary
 
 
-#Scaled Coefficent summary - Appendix D Table 33
+#Scaled Coefficent summary - Table D-2
 
 Coefficent_summary <- data.frame(coefficents = c('TransitUPT', 'TMS.1'),
                                  Scaled_estimates = scaled_coef[,1][c(4,7)],
@@ -77,7 +77,7 @@ Coefficent_summary <- data.frame(coefficents = c('TransitUPT', 'TMS.1'),
 )
 Coefficent_summary
 
-#Out of sample performance --Appendix D Table 34
+#Out of sample performance --Table D-3
 prediction_summary <- data.frame(Year = c(2018, 2019),
                                  Actual_TMS = TMS.dat.sub[15:16,1],
                                  Predicted_TMS = TMS.pred.out.1[1:2],
@@ -87,7 +87,7 @@ prediction_summary <- data.frame(Year = c(2018, 2019),
 prediction_summary 
 
 
-#Figure 23
+#Figure D-1
 plot(dat[6:18,1],TMS.dat.sub[2:14,1], xlim=c(2000,2020), ylim=c(-5,5), xlab="Year", ylab="TMS in Scaled Units")
 lines(dat[6:18,1],TMS.pred.in.1,  xlim=c(2000,2020), ylim=c(-5,5),col="blue")
 lines(dat[19:20,1], TMS.dat.sub[15:16,1], xlim=c(2000,2020), ylim=c(-1.5,1.7), type="p", pch=16)
@@ -158,7 +158,7 @@ unscaled_lo<-c(lo.1,lo.2); unscaled_hi<-c(hi.1,hi.2)
 
 
 
-#Model Summary - Table 10
+#Model Summary - Table 3-8
 model_summary <- data.frame(Model = (c('LASSO Regression, w/ Timeseries')),
                             R2 = (c(r2)),
                             MAE = (c(MAE.out.TMS.1)),
@@ -167,7 +167,7 @@ model_summary <- data.frame(Model = (c('LASSO Regression, w/ Timeseries')),
 model_summary
 
 
-#Coefficent summary - Table 11
+#Coefficent summary - Table 3-9
 
 Coefficent_summary <- data.frame(coefficents = c('TransitUPT', 'TMS.1'),
                                  Unscaled_estimates = unscaled_coef[,1][c(4,7)],
@@ -177,7 +177,7 @@ Coefficent_summary <- data.frame(coefficents = c('TransitUPT', 'TMS.1'),
 )
 Coefficent_summary
 
-#Out of sample performance -- table 12
+#Out of sample performance - Table 3-10
 prediction_summary <- data.frame(Year = c(2018, 2019),
                                  Actual_TMS = TMS.dat.sub[15:16,1],
                                  Predicted_TMS = TMS.pred.out.1[1:2],
@@ -187,7 +187,7 @@ prediction_summary <- data.frame(Year = c(2018, 2019),
 prediction_summary #incorrect TMS  prediction intervalss
 
 
-#plot related to figure 10 in report
+#plot related to Figure 3-5
 plot(dat[6:18,1],TMS.dat.sub[2:14,1], xlim=c(2000,2020), ylim=c(0.043,0.055), xlab="Year", ylab="Transit Share Percentage")
 plot(dat[6:18,1],TMS.dat.sub[2:14,1], xlim=c(2000,2020), ylim=c(0.043,0.055), xlab="Year", ylab="Transit Share Percentage")
 lines(dat[6:18,1],TMS.pred.in.1,  xlim=c(2000,2020), ylim=c(0.043,0.055),col="blue")
