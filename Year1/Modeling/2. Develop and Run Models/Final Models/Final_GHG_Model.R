@@ -1,7 +1,7 @@
 
 #This script creates the GHG 1.0 Model, which encompasses:
-#GHG Scaled Appendix C: Table 29, Table 30, Figure 22, Table 31 of the Trends Indicator Report
-#GHG Unscaled, Step 3: Table 7, Table 8, Figure 9, and Table 9 of the Trends Indicator Report
+#GHG Scaled Appendix C: Table C-1, Table C-2, Figure C-1, Table C-3 of the Trends Indicator Report
+#GHG Unscaled, Step 3: Table 3-5, Table 3-6, Figure 3-4, and Table 3-7 of the Trends Indicator Report
 
 
 library(glmnet)
@@ -67,7 +67,7 @@ lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
 scaled_coef <- coef(GHG.lasso.in.1, s=optimal.lambda)
 scaled_coef
 
-#Scaled Model Summary - Appendix D Table 29
+#Scaled Model Summary - Table C-1
 model_summary <- data.frame(Model = (c('LASSO w/ Timeseries')),
                             R2 = (c(r2)),
                             MAE = (c(MAE.out.GHG.LASSO.timeseries)),
@@ -75,7 +75,7 @@ model_summary <- data.frame(Model = (c('LASSO w/ Timeseries')),
                             RMSE = (c(RMSE.out.GHG)))
 model_summary
 
-#Scaled Coefficent summary - Appendix D Table 30
+#Scaled Coefficent summary - Table C-2
 
 Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1','Transit PMT', 'GHG.1'),
                                  Scaled_estimates = scaled_coef[,1][c(2, 3, 4 )],
@@ -86,7 +86,7 @@ Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1','Transit 
 Coefficent_summary
 
 
-#Scaled, Out of sample performance -- Appendix D Table 31
+#Scaled, Out of sample performance -- Table C-3
 prediction_summary <- data.frame(Year = c(2018, 2019),
                                  Actual_GHG = GHG.dat.sub[19:20,1],
                                  Predicted_GHG = GHG.pred.out.1,
@@ -94,7 +94,7 @@ prediction_summary <- data.frame(Year = c(2018, 2019),
                                  prediction_interval_high =  c(hi[1], hi[2]))
 prediction_summary
 
-#Appendix D Figure 22
+#Figure C-1
 plot(dat[2:18,1],GHG.dat.sub[2:18,1], xlim=c(2000,2020), ylim=c(-1.5,3.10), xlab="Year", ylab="Scaled Units of GHG")
 lines(dat[2:18,1],GHG.pred.in.1,  xlim=c(2000,2020), ylim=c(-1.5,3.10),col="blue")
 lines(dat[19:20,1], GHG.dat.sub[19:20,1], xlim=c(2000,2020), ylim=c(-1.5,3.10), type="p", pch=16)
@@ -162,7 +162,7 @@ lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
 
 
 
-#Unscaled Model Summary - Table 7
+#Unscaled Model Summary - Table 3-5
 model_summary <- data.frame(Model = (c('LASSO w/ Timeseries')),
                             R2 = (c(r2)),
                             MAE = (c(MAE.out.GHG.1)),
@@ -170,7 +170,7 @@ model_summary <- data.frame(Model = (c('LASSO w/ Timeseries')),
                             RMSE = (c(RMSE.out.GHG.1)))
 model_summary
 
-#Unscaled Coefficent summary - Table 8
+#Unscaled Coefficent summary - Table 3-6
 
 Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1','Transit PMT', 'GHG.1'),
                                  Unscaled_estimates = unscaled_coef[,1][c(2,3,4)],
@@ -181,7 +181,7 @@ Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1','Transit 
 Coefficent_summary
 
 
-#Out of sample performance -- Table 9
+#Out of sample performance -- Table 3-7
 prediction_summary <- data.frame(Year = c(2018, 2019),
                                  Actual_GHG = GHG.dat.sub[18:19,1],
                                  Predicted_GHG = GHG.pred.out.1,
@@ -192,7 +192,7 @@ prediction_summary
 
 
 
-#Figure 9 
+#Figure 3-4
 
 plot(dat[1:18,1],GHG.dat.sub[1:18,1], xlim=c(2000,2020), ylim=c(1747.5,2106.217), xlab="Year", ylab="GHG         (MMT CO2 eq.)")
 lines(dat[2:18,1],GHG.pred.in.1,  xlim=c(2000,2020), ylim=c(1747.5,2106.217),col="blue")
