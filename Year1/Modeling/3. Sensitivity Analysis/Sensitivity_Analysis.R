@@ -1,5 +1,5 @@
 #This script is used to create the sensitivity analysis for the 1.0 Models. 
-#It relates to Step 4: Tables 13, 14,and 15
+#It relates to Section 4
 
 #read the dataset
 dat<-read.csv("C:/Users/zapate/Documents/FHWA-Mobility-Trends-main/FHWA-Mobility-Trends-main/Year1/Modeling/Data/Data20221210.csv", header=TRUE)
