@@ -1,7 +1,7 @@
 
 #This script creates the VMT 1.0 Model, which encompasses:
-#VMT Scaled Appendix B: Table 26, Table 27, Figure 21, Table 28 of the Trends Indicator Report
-#VMT Unscaled, Step 3: Table 4, Table 5, Figure 8, and Table 6 of the Trends Indicator Report
+#VMT Scaled Appendix B: Table B-1, Table B-2, Figure B-1, Table B-3 of the Trends Indicator Report
+#VMT Unscaled, Step 3: Table 3-1, Table 3-2, Figure 3-3, and Table 3-4 of the Trends Indicator Report
 
 library(glmnet)
 library(glmnetSE)
@@ -59,7 +59,7 @@ hi.2<-2.19843+2.16*sqrt(MSE.in.VMT*(1+as.matrix(x1) %*% solve(X.X) %*% t(as.matr
 lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
 
 
-# Scaled model summary (Appendix B Table 26)
+# Scaled model summary Table B-1
 model_summary <- data.frame(Model = (c('VMT Ridge Regression, No Timeseries')),
                             R2 = (c(r2)),
                             MAE = (c(MAE.out.VMT)),
@@ -67,7 +67,7 @@ model_summary <- data.frame(Model = (c('VMT Ridge Regression, No Timeseries')),
                             RMSE = (c(RMSE.out.VMT)))
 model_summary
 
-#scaled model coefficents (Appendix B Table 27) 
+#scaled model coefficents Table B-2
 Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1', 'Total Lane Miles', 'Transit Passenger Miles Traveled',
                                                  'Ev Priv. and Pub. Stations', 'Pop. Telework'),
                                  Scaled_estimates = scaled_coefficents[,1][c(2,3,4,5,6)],
@@ -77,7 +77,7 @@ Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1', 'Total L
 )
 Coefficent_summary
 
-#Scaled Out of sample performance (appendix B Table 28)
+#Scaled Out of sample performance Table B-3
 prediction_summary <- data.frame(Year = c(2018, 2019),
                                  Actual_VMT = VMT.dat.sub[19:20,1],
                                  Predicted_VMT = VMT.pred.out,
@@ -85,7 +85,7 @@ prediction_summary <- data.frame(Year = c(2018, 2019),
                                  prediction_interval_high =  c(hi[1], hi[2]))
 prediction_summary
 
-#plot of scaled model (Appendix B Figure 21)
+#plot of scaled model Figure B-1
 plot(dat[1:18,1],VMT.dat.sub[1:18,1], xlim=c(2000,2020), ylim=c(-1.5,3.10), xlab="Year", ylab="VMT in Scaled Units")
 lines(dat[1:18,1],VMT.pred.in,  xlim=c(2000,2020), ylim=c(-1.5,3.10),col="blue")
 lines(dat[19:20,1], VMT.dat.sub[19:20,1], xlim=c(2000,2020), ylim=c(-1.5,3.10), type="p", pch=16)
@@ -136,7 +136,6 @@ unscaled_coefficents <- coef(VMT.ridge.in, s=optimal.lambda)
 bootstrap_unscaled <- glmnetSE(data=VMT.dat.s[2:18,], cf.no.shrnkg = c("Unemployment.Rate.1","TotLaneMiles","TransitPMT","EVPrivateandPublicChargingStationLocations","populationTelework"), alpha=0,r=1500, method="none",seed = 1234, ncore = 1)
 summary(bootstrap_unscaled)
 
-#Plot the best model - Figure 8
 X.X<-t(as.matrix(cbind(rep(1,18), VMT.dat.sub[1:18,-c(1,7)]))) %*% as.matrix(cbind(rep(1,18), VMT.dat.sub[1:18,-c(1,7)]) )
 x0<-cbind(1, VMT.dat.sub[19,-c(1,7)])
 x1<-cbind(1, VMT.dat.sub[20,-c(1,7)])
@@ -149,7 +148,7 @@ lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
 
 
 #########
-#Model Summary - Step 3, Table 4
+#Model Summary - Table 3-1
 model_summary <- data.frame(Model = (c('Ridge Regression, No Timeseries')),
                            R2 = (c(r2)),
                            MAE = (c(MAE.out.VMT)),
@@ -157,7 +156,7 @@ model_summary <- data.frame(Model = (c('Ridge Regression, No Timeseries')),
                            RMSE = (c(RMSE.out.VMT)))
 model_summary
 
-#Coefficent summary - Step 3, Table 5
+#Coefficent summary - Table 3-2
 
 Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1', 'Total Lane Miles', 'Transit Passenger Miles Traveled',
                                                  'Ev Priv. and Pub. Stations', 'Pop. Telework'),
@@ -168,7 +167,7 @@ Coefficent_summary <- data.frame(coefficents = c('Unemployment Rate 1', 'Total L
                                  )
 Coefficent_summary
 
-#Out of sample performance -- Step 3, table 6
+#Out of sample performance -- Table 3-4
 prediction_summary <- data.frame(Year = c(2018, 2019),
                                  Actual_VMT = VMT.dat.sub[19:20,1],
                                  Predicted_VMT = VMT.pred.out,
@@ -176,7 +175,7 @@ prediction_summary <- data.frame(Year = c(2018, 2019),
                                  prediction_interval_high =  c(hi[1], hi[2]))
 prediction_summary
 
-#Plot of VMT model 1.0, Step 3, Figure 8
+#Plot of VMT model 1.0,  Figure 3-3
 plot(dat[1:18,1],VMT.dat.sub[1:18,1], xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), xlab="Year", ylab="VMT")
 lines(dat[1:18,1],VMT.pred.in,  xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), col="blue")
 lines(dat[19:20,1], VMT.dat.sub[19:20,1], xlim=c(2000,2020),ylim=c(2.745396e+12,3.443086e+12), type="p", pch=16)
