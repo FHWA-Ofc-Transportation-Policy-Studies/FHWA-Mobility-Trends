@@ -28,6 +28,9 @@ This part of the repo represents the modeling code for Year 1. The folders are b
 		Appendix_F_Sensitivity_Analysis.R – Creates additional analysis included in Appendix F
 	4. Future Forecasts
 		Forecasting – Models_and_Sensitivity.R – Used to create the forecast of performance metrics using coefficients derived from final models and expert forecasts of the indicators.
+	task 6b
+		Task 6b Models.R - Models and visualizations pertaining to Task 6b forecasting and quantitative effects. 
+		
 		
 		
 The R scripts will require the following R packages to be installed:
