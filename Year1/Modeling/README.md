@@ -1,4 +1,4 @@
-This part of the repo represents the modeling code for Year 1. The folders are broken up to mirror the steps taken within the Trends Indicator Memorandum.  Each script has comments containing the relevant figure/table of the Final Trends Indicator Memorandum it relates to. The order of folders, subfolders, and files are as follows:
+This part of the repo represents the modeling code for Year 1. The folders are broken up to mirror the steps taken within the Trends Indicator Memorandum, except for the folder task 6b, which was part of the policy analysis deliverable. Each script has comments containing the relevant figure/table of the Final Trends Indicator Memorandum it relates to. The order of folders, subfolders, and files are as follows:
 
 	1. Identify High Priority Trends 
 		Stepwise_Regression.R – Used to run stepwise regression on the 15 trend indicators to reduce them down to 5 for modeling in task 4.
