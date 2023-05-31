@@ -80,7 +80,8 @@ pred_f4 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c
 pred_f5 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c(1:5,11)]))
 
 #Figure 3-2: Plots of the Future Forecasts of the 5 Scenarios
-plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)));
+plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)), 
+     xlab = "", ylab = "VMT");
 #lines(c(2000:2019), predall,col='green');
 #lines(c(2000:2019),y_var, col='blue');
 lines(c(2023:2050),pred_f1, col='red');
@@ -88,6 +89,10 @@ lines(c(2023:2050),pred_f2, col='orange');
 lines(c(2023:2050),pred_f3, col='yellow');
 lines(c(2023:2050),pred_f4, col='cyan');
 lines(c(2023:2050),pred_f5, col='green');
+legend("topleft", 
+       legend = c("Scenario A", "Scenario B", "Scenario C", "Scenairo D", "Scenario E"), 
+       pch = 15,
+       col = c('green', 'cyan', 'yellow', 'orange', 'red'))
 
 #==================================================================#
 
@@ -143,7 +148,8 @@ pred_f4 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c
 pred_f5 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c(1:4,11,6)]))
 
 #Figure 3-3 : Plots of the Future Forecasts of the 5 Scenarios
-plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)));
+plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)), 
+     xlab = '', ylab = "VMT");
 #lines(c(2000:2019), predall,col='green');
 #lines(c(2000:2019),y_var, col='blue');
 lines(c(2023:2050),pred_f1, col='red');
@@ -151,6 +157,10 @@ lines(c(2023:2050),pred_f2, col='orange');
 lines(c(2023:2050),pred_f3, col='yellow');
 lines(c(2023:2050),pred_f4, col='cyan');
 lines(c(2023:2050),pred_f5, col='green');
+legend("bottomright", 
+       legend = c("Scenario A", "Scenario B", "Scenario C", "Scenairo D", "Scenario E"), 
+       pch = 15,
+       col = c('green', 'cyan', 'yellow', 'orange', 'red'))
 
 #==================================================================#
 
@@ -206,7 +216,8 @@ pred_f4 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c
 pred_f5 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c(1:4,10)]))
 
 #Figure 3-4 : Plots of the Future Forecasts of the 5 Scenarios
-plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)));
+plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)), 
+     xlab = "", ylab = "VMT");
 #lines(c(2000:2019), predall,col='green');
 #lines(c(2000:2019),y_var, col='blue');
 lines(c(2023:2050),pred_f1, col='red');
@@ -214,6 +225,10 @@ lines(c(2023:2050),pred_f2, col='orange');
 lines(c(2023:2050),pred_f3, col='yellow');
 lines(c(2023:2050),pred_f4, col='cyan');
 lines(c(2023:2050),pred_f5, col='green');
+legend("bottomright", 
+       legend = c("Scenario A", "Scenario B", "Scenario C", "Scenairo D", "Scenario E"), 
+       pch = 15,
+       col = c('green', 'cyan', 'yellow', 'orange', 'red'))
 
 ##### 2) GHG ###############################################
 
@@ -287,7 +302,8 @@ pred_f4 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[,c(1:5,10
 pred_f5 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[,c(1:5,11)]))
 
 #Figure 3-5 Plots of the Future Forecasts of the 5 Scenarios
-plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)));
+plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)), 
+     xlab ="", ylab = "Transport GHG");
 #lines(c(2000:2019), predall,col='green');
 #lines(c(2000:2019),y_var, col='blue');
 lines(c(2023:2050),pred_f1[4:31], col='red');
@@ -295,6 +311,10 @@ lines(c(2023:2050),pred_f2[4:31], col='orange');
 lines(c(2023:2050),pred_f3[4:31], col='yellow');
 lines(c(2023:2050),pred_f4[4:31], col='cyan');
 lines(c(2023:2050),pred_f5[4:31], col='green');
+legend("bottomleft", 
+       legend = c("Scenario A", "Scenario B", "Scenario C", "Scenairo D", "Scenario E"), 
+       pch = 15,
+       col = c('green', 'cyan', 'yellow', 'orange', 'red'))
 
 #==================================================================#
 
@@ -545,7 +565,8 @@ pred_f4 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[,c(1:5,10
 pred_f5 <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[,c(1:5,11)]))
 
 #Plots of the Future Forecasts of the 5 Scenarios
-plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)));
+plot(c(2000:2019), y_var, col='red', xlim=c(2000,2050), ylim=c(0,max(pred_f5)), 
+     xlab = "", ylab = "GHG");
 #lines(c(2000:2019), predall,col='green');
 #lines(c(2000:2019),y_var, col='blue');
 lines(c(2023:2050),pred_f1[4:31], col='red');
@@ -553,6 +574,12 @@ lines(c(2023:2050),pred_f2[4:31], col='orange');
 lines(c(2023:2050),pred_f3[4:31], col='yellow');
 lines(c(2023:2050),pred_f4[4:31], col='cyan');
 lines(c(2023:2050),pred_f5[4:31], col='green')
+legend("bottomleft", 
+       legend = c("Scenario A", "Scenario B", "Scenario C", "Scenairo D", "Scenario E"), 
+       pch = 15,
+       col = c('green', 'cyan', 'yellow', 'orange', 'red'))
+
+
 
 
 
