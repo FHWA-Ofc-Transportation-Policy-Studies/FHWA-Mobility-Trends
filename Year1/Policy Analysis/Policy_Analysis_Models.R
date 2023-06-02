@@ -12,10 +12,10 @@
 remove(list=ls())
 
 # Loading the library
-library(glmnet); library(dplyr)
+library(glmnet); library(dplyr); library(caret)
 
 #set working directory
-setwd("C:/Users/zapate/Documents/task 6b year 1")
+setwd("C:/Users/zapate/Documents/task6_6_2/FHWA-Mobility-Trends/Year1/Policy Analysis")
 
 #load the data
 dp<-read.csv("Data 20230509 - DataP.csv", header=TRUE)
@@ -67,6 +67,51 @@ rss <- sum((preds - actual) ^ 2)
 tss <- sum((actual - mean(actual)) ^ 2)
 rsq <- 1 - rss/tss
 rsq
+
+#Out of sample testing
+d = y_test - pred
+mse.out = mean((d)^2)
+mae.out = mean(abs(d))
+rmse.out = sqrt(mse.out)
+
+cat(" MAE:", mae.out, "\n", "MSE:", mse.out, "\n", 
+    "RMSE:", rmse.out, "\n")
+
+#in sample testing
+d = y_var[train] - predall[1:18]
+mse.in = mean((d)^2)
+mae.in = mean(abs(d))
+rmse.in = sqrt(mse.in)
+
+cat(" MAE:", mae.in, "\n", "MSE:", mse.in, "\n", 
+    "RMSE:", rmse.in, "\n")
+
+#prediction interval unscaled
+X.X<-t(as.matrix(cbind(rep(1,18), x_vars[train,]))) %*% as.matrix(cbind(rep(1,18), x_vars[train,]))
+x0<-cbind(1, as.matrix(x_vars[19,]))
+x1<-cbind(1, as.matrix(x_vars[20,]))
+
+#Plot the best model in scaled form (not in report)
+#prediction interval calculation
+lo.1<-pred[1,1]-2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+lo.2<-pred[2,1]-2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+hi.1<-pred[1,1]+2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+hi.2<-pred[2,1]+2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
+
+#prediction interval plot
+plot(dp$Year[1:18],dp$VMT[1:18], xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), xlab="Year", ylab="VMT")
+lines(dp$Year[1:18],predall[1:18],  xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), col="blue")
+lines(dp$Year[19:20], dp$VMT[19:20], xlim=c(2000,2020),ylim=c(2.745396e+12,3.443086e+12), type="p", pch=16)
+lines(dp$Year[19:20], pred, xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), type="p", pch=16, col="blue")
+segments(x0=2018,x1=2018, y0=lo.1, y1=hi.1, lty = "dotted", col="red")
+segments(x0=2019,x1=2019, y0=lo.2, y1=hi.2, lty = "dotted", col="red")
+segments(x0=2017.6,x1=2018.4, y0=lo.1, y1=lo.1, col="red")
+segments(x0=2017.6,x1=2018.6, y0=hi.1, y1=hi.1, col="red")
+segments(x0=2018.6,x1=2019.4, y0=lo.2, y1=lo.2, col="red")
+segments(x0=2018.6,x1=2019.6, y0=hi.2, y1=hi.2, col="red")
+
+
 
 #Future Forecast
 x_vars_f = df[,c(4,5,6,7,8,9,18:22)]; #x_vars_f = x_vars_f[,-5]
@@ -136,6 +181,51 @@ tss <- sum((actual - mean(actual)) ^ 2)
 rsq <- 1 - rss/tss
 rsq
 
+
+#Out of sample testing
+d = y_test - pred
+mse.out = mean((d)^2)
+mae.out = mean(abs(d))
+rmse.out = sqrt(mse.out)
+
+cat(" MAE:", mae.out, "\n", "MSE:", mse.out, "\n", 
+    "RMSE:", rmse.out, "\n")
+
+#in sample testing
+d = y_var[train] - predall[1:18]
+mse.in = mean((d)^2)
+mae.in = mean(abs(d))
+rmse.in = sqrt(mse.in)
+
+cat(" MAE:", mae.in, "\n", "MSE:", mse.in, "\n", 
+    "RMSE:", rmse.in, "\n")
+
+#prediction interval unscaled
+X.X<-t(as.matrix(cbind(rep(1,18), x_vars[train,]))) %*% as.matrix(cbind(rep(1,18), x_vars[train,]))
+x0<-cbind(1, as.matrix(x_vars[19,]))
+x1<-cbind(1, as.matrix(x_vars[20,]))
+
+#Plot the best model in scaled form (not in report)
+#prediction interval calculation
+lo.1<-pred[1,1]-2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+lo.2<-pred[2,1]-2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+hi.1<-pred[1,1]+2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+hi.2<-pred[2,1]+2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
+
+#prediction interval plot
+plot(dp$Year[1:18],dp$VMT[1:18], xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), xlab="Year", ylab="VMT")
+lines(dp$Year[1:18],predall[1:18],  xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), col="blue")
+lines(dp$Year[19:20], dp$VMT[19:20], xlim=c(2000,2020),ylim=c(2.745396e+12,3.443086e+12), type="p", pch=16)
+lines(dp$Year[19:20], pred, xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), type="p", pch=16, col="blue")
+segments(x0=2018,x1=2018, y0=lo.1, y1=hi.1, lty = "dotted", col="red")
+segments(x0=2019,x1=2019, y0=lo.2, y1=hi.2, lty = "dotted", col="red")
+segments(x0=2017.6,x1=2018.4, y0=lo.1, y1=lo.1, col="red")
+segments(x0=2017.6,x1=2018.6, y0=hi.1, y1=hi.1, col="red")
+segments(x0=2018.6,x1=2019.4, y0=lo.2, y1=lo.2, col="red")
+segments(x0=2018.6,x1=2019.6, y0=hi.2, y1=hi.2, col="red")
+
+
 #Future Forecast
 x_vars_f = df[,c(4,5,6,7,9,10,18:22)]; #x_vars_f = x_vars_f[,-5]
 pred_f <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c(1:4,5,6)]))
@@ -204,6 +294,50 @@ tss <- sum((actual - mean(actual)) ^ 2)
 rsq <- 1 - rss/tss
 rsq
 
+#Out of sample testing
+d = y_test - pred
+mse.out = mean((d)^2)
+mae.out = mean(abs(d))
+rmse.out = sqrt(mse.out)
+
+cat(" MAE:", mae.out, "\n", "MSE:", mse.out, "\n", 
+    "RMSE:", rmse.out, "\n")
+
+#in sample testing
+d = y_var[train] - predall[1:18]
+mse.in = mean((d)^2)
+mae.in = mean(abs(d))
+rmse.in = sqrt(mse.in)
+
+cat(" MAE:", mae.in, "\n", "MSE:", mse.in, "\n", 
+    "RMSE:", rmse.in, "\n")
+
+#prediction interval unscaled
+X.X<-t(as.matrix(cbind(rep(1,18), x_vars[train,]))) %*% as.matrix(cbind(rep(1,18), x_vars[train,]))
+x0<-cbind(1, as.matrix(x_vars[19,]))
+x1<-cbind(1, as.matrix(x_vars[20,]))
+
+#Plot the best model in scaled form (not in report)
+#prediction interval calculation
+lo.1<-pred[1,1]-2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+lo.2<-pred[2,1]-2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+hi.1<-pred[1,1]+2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+hi.2<-pred[2,1]+2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
+
+#prediction interval plot
+plot(dp$Year[1:18],dp$VMT[1:18], xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), xlab="Year", ylab="VMT")
+lines(dp$Year[1:18],predall[1:18],  xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), col="blue")
+lines(dp$Year[19:20], dp$VMT[19:20], xlim=c(2000,2020),ylim=c(2.745396e+12,3.443086e+12), type="p", pch=16)
+lines(dp$Year[19:20], pred, xlim=c(2000,2020), ylim=c(2.745396e+12,3.443086e+12), type="p", pch=16, col="blue")
+segments(x0=2018,x1=2018, y0=lo.1, y1=hi.1, lty = "dotted", col="red")
+segments(x0=2019,x1=2019, y0=lo.2, y1=hi.2, lty = "dotted", col="red")
+segments(x0=2017.6,x1=2018.4, y0=lo.1, y1=lo.1, col="red")
+segments(x0=2017.6,x1=2018.6, y0=hi.1, y1=hi.1, col="red")
+segments(x0=2018.6,x1=2019.4, y0=lo.2, y1=lo.2, col="red")
+segments(x0=2018.6,x1=2019.6, y0=hi.2, y1=hi.2, col="red")
+
+
 #Future Forecast
 x_vars_f = df[,c(4,5,6,7,9,18:22)]; #x_vars_f = x_vars_f[,-5]
 pred_f <- predict(lasso_best, s = best_lam, newx = as.matrix(x_vars_f[c(4:31),c(1:4,5)]))
@@ -239,7 +373,7 @@ remove(list=ls())
 library(glmnet); library(dplyr)
 
 #set working directory
-setwd("C:/Users/zapate/Documents/task 6b year 1")
+setwd("C:/Users/zapate/Documents/task6_6_2/FHWA-Mobility-Trends/Year1/Policy Analysis")
 
 #load the data
 dp<-read.csv("Data 20230509 - DataP.csv", header=TRUE)
@@ -289,6 +423,50 @@ rss <- sum((preds - actual) ^ 2)
 tss <- sum((actual - mean(actual)) ^ 2)
 rsq <- 1 - rss/tss
 rsq
+
+
+#Out of sample testing
+d = y_test - pred
+mse.out = mean((d)^2)
+mae.out = mean(abs(d))
+rmse.out = sqrt(mse.out)
+
+cat(" MAE:", mae.out, "\n", "MSE:", mse.out, "\n", 
+    "RMSE:", rmse.out, "\n")
+
+#in sample testing
+d = y_var[train] - predall[1:18]
+mse.in = mean((d)^2)
+mae.in = mean(abs(d))
+rmse.in = sqrt(mse.in)
+
+cat(" MAE:", mae.in, "\n", "MSE:", mse.in, "\n", 
+    "RMSE:", rmse.in, "\n")
+
+#prediction interval unscaled
+X.X<-t(as.matrix(cbind(rep(1,18), x_vars[train,]))) %*% as.matrix(cbind(rep(1,18), x_vars[train,]))
+x0<-cbind(1, as.matrix(x_vars[19,]))
+x1<-cbind(1, as.matrix(x_vars[20,]))
+
+#Plot the best model in scaled form (not in report)
+#prediction interval calculation
+lo.1<-pred[1,1]-2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+lo.2<-pred[2,1]-2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+hi.1<-pred[1,1]+2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+hi.2<-pred[2,1]+2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
+
+#prediction interval plot
+plot(dp$Year[1:18],dp$TransportGHG[1:18], xlim=c(2000,2020), ylim=c(1747.5,2106.217), xlab="Year", ylab="VMT")
+lines(dp$Year[1:18],predall[1:18],  xlim=c(2000,2020), ylim=c(1747.5,2106.217), col="blue")
+lines(dp$Year[19:20], dp$TransportGHG[19:20], xlim=c(2000,2020),ylim=c(1747.5,2106.217), type="p", pch=16)
+lines(dp$Year[19:20], pred, xlim=c(2000,2020), ylim=c(1747.5,2106.217), type="p", pch=16, col="blue")
+segments(x0=2018,x1=2018, y0=lo.1, y1=hi.1, lty = "dotted", col="red")
+segments(x0=2019,x1=2019, y0=lo.2, y1=hi.2, lty = "dotted", col="red")
+segments(x0=2017.6,x1=2018.4, y0=lo.1, y1=lo.1, col="red")
+segments(x0=2017.6,x1=2018.6, y0=hi.1, y1=hi.1, col="red")
+segments(x0=2018.6,x1=2019.4, y0=lo.2, y1=lo.2, col="red")
+segments(x0=2018.6,x1=2019.6, y0=hi.2, y1=hi.2, col="red")
 
 #Future Forecast
 x_vars_f = df[,c(4:8,9,18:22)]; #x_vars_f = x_vars_f[,-5]
@@ -355,6 +533,52 @@ rss <- sum((preds - actual) ^ 2)
 tss <- sum((actual - mean(actual)) ^ 2)
 rsq <- 1 - rss/tss
 rsq
+
+
+#Out of sample testing
+d = y_test - pred
+mse.out = mean((d)^2)
+mae.out = mean(abs(d))
+rmse.out = sqrt(mse.out)
+
+cat(" MAE:", mae.out, "\n", "MSE:", mse.out, "\n", 
+    "RMSE:", rmse.out, "\n")
+
+#in sample testing
+d = y_var[train] - predall[1:18]
+mse.in = mean((d)^2)
+mae.in = mean(abs(d))
+rmse.in = sqrt(mse.in)
+
+cat(" MAE:", mae.in, "\n", "MSE:", mse.in, "\n", 
+    "RMSE:", rmse.in, "\n")
+
+#prediction interval unscaled
+X.X<-t(as.matrix(cbind(rep(1,18), x_vars[train,]))) %*% as.matrix(cbind(rep(1,18), x_vars[train,]))
+x0<-cbind(1, as.matrix(x_vars[19,]))
+x1<-cbind(1, as.matrix(x_vars[20,]))
+
+#Plot the best model in scaled form (not in report)
+#prediction interval calculation
+lo.1<-pred[1,1]-2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+lo.2<-pred[2,1]-2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+hi.1<-pred[1,1]+2.16*sqrt(mse.in*(1+as.matrix(x0) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x0))))
+hi.2<-pred[2,1]+2.16*sqrt(mse.in*(1+as.matrix(x1) %*% solve(X.X, tol=7.92698e-29) %*% t(as.matrix(x1))))
+lo<-c(lo.1,lo.2); hi<-c(hi.1,hi.2)
+
+#prediction interval plot
+plot(dp$Year[1:18],dp$TransportGHG[1:18], xlim=c(2000,2020), ylim=c(1500.5,2106.217), xlab="Year", ylab="VMT")
+lines(dp$Year[1:18],predall[1:18],  xlim=c(2000,2020), ylim=c(1500.5,2106.217), col="blue")
+lines(dp$Year[19:20], dp$TransportGHG[19:20], xlim=c(2000,2020),ylim=c(1500.5,2106.217), type="p", pch=16)
+lines(dp$Year[19:20], pred, xlim=c(2000,2020), ylim=c(1500.5,2106.217), type="p", pch=16, col="blue")
+segments(x0=2018,x1=2018, y0=lo.1, y1=hi.1, lty = "dotted", col="red")
+segments(x0=2019,x1=2019, y0=lo.2, y1=hi.2, lty = "dotted", col="red")
+segments(x0=2017.6,x1=2018.4, y0=lo.1, y1=lo.1, col="red")
+segments(x0=2017.6,x1=2018.6, y0=hi.1, y1=hi.1, col="red")
+segments(x0=2018.6,x1=2019.4, y0=lo.2, y1=lo.2, col="red")
+segments(x0=2018.6,x1=2019.6, y0=hi.2, y1=hi.2, col="red")
+
+
 
 #==================================================================#
 
@@ -453,7 +677,7 @@ remove(list=ls())
 library(glmnet); library(dplyr)
 
 #set working directory
-setwd("C:/Users/zapate/Documents/task 6b year 1")
+setwd("C:/Users/zapate/Documents/task6_6_2/FHWA-Mobility-Trends/Year1/Policy Analysis")
 
 #load the data
 dp<-read.csv("Data 20230509 - DataP.csv", header=TRUE)

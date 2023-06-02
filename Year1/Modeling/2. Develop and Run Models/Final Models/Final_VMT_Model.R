@@ -6,7 +6,7 @@
 library(glmnet)
 library(glmnetSE)
 #read the dataset (may need to change this path to get to file)
-dat<-read.csv("C:/Users/zapate/Documents/FHWA-Mobility-Trends-main/FHWA-Mobility-Trends-main/Year1/Modeling/Data/Data20221210.csv", header=TRUE)
+dat<-read.csv("C:/Users/zapate/Documents/task6_6_2/FHWA-Mobility-Trends/Year1//Modeling/Data/Data20221210.csv", header=TRUE)
 
 #VMT Scaled - Appendix B##############################################################################################################
 #filter to correct data and scale. 
