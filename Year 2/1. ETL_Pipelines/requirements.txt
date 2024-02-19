@@ -1,0 +1,7 @@
+pandas
+numpy
+os
+tqdm
+requests
+urllib
+matplotlib

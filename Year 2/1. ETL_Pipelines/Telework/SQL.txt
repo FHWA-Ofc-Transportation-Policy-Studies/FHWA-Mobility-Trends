@@ -1,0 +1,32 @@
+
+--TELWORK
+select ST, year, b.FIPS_CODE, 
+        sum(case when cast(a.jwtr as INTEGER) in (11) then 1 else 0 end * a.PWGTP) / 
+          case when sum(a.PWGTP * case when a.jwtr != 'NULL' then 1 else 0 end) = 0 then 1 else sum(a.PWGTP * case when a.jwtr != 'NULL' then 1 else 0 end) end Telework
+from ACS_PERSON a
+left join "FHWA_DEV_ZP_TEST"."RAW_TEST"."CENSUS_TO_PUMAS_CROSSWALK_2010" b on cast(a.ST as INTEGER) = cast(b.STATEFP as INTEGER) and cast(a.PUMA as INTEGER) = cast(b.PUMA5CE as INTEGER)
+where year < 2019
+group by ST, b.FIPS_CODE, year
+
+union all
+
+select ST, year, b.FIPS_CODE, 
+        sum(case when cast(a.JWTRNS as INTEGER) in (11) then 1 else 0 end * a.PWGTP) / 
+          case when sum(a.PWGTP * case when a.JWTRNS != 'NULL' then 1 else 0 end) = 0 then 1 else sum(a.PWGTP * case when a.JWTRNS != 'NULL' then 1 else 0 end) end Telework
+from 
+(select ST, year, PUMA, JWTRNS, PWGTP from "FHWA_DEV_ZP_TEST"."RAW_TEST"."ACS_PERSON_2019_1"
+ union all 
+ select ST, year, PUMA, JWTRNS, PWGTP from "FHWA_DEV_ZP_TEST"."RAW_TEST"."ACS_PERSON_2019_2"
+ ) a
+left join "FHWA_DEV_ZP_TEST"."RAW_TEST"."CENSUS_TO_PUMAS_CROSSWALK_2010" b on cast(a.ST as INTEGER) = cast(b.STATEFP as INTEGER) and cast(a.PUMA as INTEGER) = cast(b.PUMA5CE as INTEGER)
+where year = 2019
+group by ST, b.FIPS_CODE, year
+
+union all 
+
+select ST, year, b.FIPS_CODE, 
+        sum(case when cast(a.JWTRNS as INTEGER) in (11) then 1 else 0 end * a.PWGTP) / 
+          case when sum(a.PWGTP * case when a.JWTRNS != 'NULL' then 1 else 0 end) = 0 then 1 else sum(a.PWGTP * case when a.JWTRNS != 'NULL' then 1 else 0 end) end Telework
+from ACS_PERSON_2020 a
+left join "FHWA_DEV_ZP_TEST"."RAW_TEST"."CENSUS_TO_PUMAS_CROSSWALK_2010" b on cast(a.ST as INTEGER) = cast(b.STATEFP as INTEGER) and cast(a.PUMA as INTEGER) = cast(b.PUMA5CE as INTEGER)
+group by ST, b.FIPS_CODE, year

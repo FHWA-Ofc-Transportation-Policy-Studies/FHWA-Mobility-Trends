@@ -1,0 +1,8 @@
+Report Type: County By Source Classification
+Data Set: 2017NEI_Apr2020
+Region: EPA Region 1, EPA Region 2, EPA Region 3, EPA Region 4, EPA Region 5, EPA Region 6, EPA Region 7, EPA Region 8, EPA Region 9, EPA Region 10
+Data Category: Onroad
+Reporting Period Type: Annual
+Tagged Data Handling: Not Tagged and Tagged included
+Emissions Operating Type: Routine
+Columns Selected: EPA Region Code, State, FIPS State Code, Tribal Name, FIPS Code, County, Data Category, Emissions Type Code, SCC, Sector, AETC, Reporting Period, Emissions Operating Type, Pollutant Code, Pollutant Desc, Pollutant Type(s), Total Emissions, Emissions UOM, Data Set
