@@ -1,0 +1,8 @@
+install.packages("car")
+install.packages("caret")
+install.packages("tidyr")
+install.packages("glmnet") 
+install.packages("corrplot")
+install.packages("ggplot2")
+install.packages("tidyverse")
+install.packages("omnibus") 

@@ -16,6 +16,7 @@ Within each of the folders are additional instructions on how to use this code.
 Folder structure:
 
 Year 2 County Level - all year 2 code and data for Mobility Trends project
+	Install_packages.R - Neccessary packages to run modeling and forecast code
 
     1. ETL_Pipelines- Code and data required to create the county modeling data for year 2
         *Trend Folders - Each trend resprented within the models has it's own folder where the data was tranformed into the county level data
