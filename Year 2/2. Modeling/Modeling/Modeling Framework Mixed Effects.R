@@ -18,7 +18,7 @@ library(omnibus)
 #clear workspace
 rm(list = setdiff(ls(), lsf.str()))
 
-##### Final VMT Model (run on 1/8/24)
+##### Final VMT Model (run on 2/16/24)
 #set the list of indicators you want to work with
 df <- read.csv(paste(dirname(getwd()),"/Data/County_Year2_2_16_2024.csv", sep = ''))
 indicators <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK","UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY")
@@ -28,7 +28,7 @@ train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
 remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 
-##### Final GHG Model (run on 1/8/23)
+##### Final GHG Model (run on 2/16/23)
 #load in the data you want to use 
 df <- read.csv(paste(dirname(getwd()),"/Data/County_Year2_2_16_2024.csv", sep = ''))
 #set the list of indicators you want to work with
@@ -39,7 +39,7 @@ train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
 remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 
-##### Final TMS Model (run on 1/10/24)
+##### Final TMS Model (run on 2/16/24)
 #load in the data you want to use 
 df <- read.csv(paste(dirname(getwd()),"/Data/County_Year2_2_16_2024.csv", sep = ''))
 #set the list of indicators you want to work with

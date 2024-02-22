@@ -10,21 +10,10 @@ library(tidyverse)
 #clear workspace
 rm(list = setdiff(ls(), lsf.str()))
 
-setwd("C:/Users/hrowe/Documents/FHWA mobility trend report/T4 - Forecasting/Year 2/FHWA_Mobility_Trends_Updatey2_2_19_2024/Year 2/") 
+df <- read.csv(paste(dirname(getwd()),"/Data/County_Year2_2_16_2024.csv", sep = ''))
 
-#load in the data you want to use 
-df <- read.csv(paste(dirname(getwd()),"Year 2/2. Modeling/Data/T6_county_2_19_24.csv", sep = '/'))
 
-##### Final VMT Model (run on 1/8/24)
-#set the list of indicators you want to work with
-indicators <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK","UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY")
-non_indicator_var <- c("Full_FIPS_Code", "YEAR", "County_Type")
-y <-  "VMT" #set your dependent variable #"TOTAL_EMISSIONS", "TMS"
-train_percent <- 0.7 #set the percent of data you want to use in the train set
-n = 1 #define number of model trials you want to run
-remove_y_zeros <- TRUE #(set to FLASE if preferred to keep zeros in)
-
-##### VMT Model for Task 6 (ondemand) (run on 2/19/24)
+##### Final VMT Model (run on 2/16/24)
 #set the list of indicators you want to work with
 indicators <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK","UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY")
 non_indicator_var <- c("Full_FIPS_Code", "YEAR", "County_Type")

@@ -14,17 +14,15 @@ rm(list = setdiff(ls(), lsf.str()))
 #load in the data you want to use 
 df <- read.csv(paste(dirname(getwd()),"/2. Modeling/Data/County_Year2_2_16_2024.csv", sep = ''))
 
-##### Final GHG Model (run on 1/8/23)
+##### Final GHG Model (run on 2/16/24)
 #set the list of indicators you want to work with
-indicators <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK","UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY")
+indicators <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK",
+                "UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY")
 non_indicator_var <- c("Full_FIPS_Code", "YEAR", "County_Type")
 y <-  "TOTAL_EMISSIONS" #set your dependent variable 
 train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
 remove_y_zeros <- TRUE #(set to FLASE if preferred to keep zeros in)
-
-#run this at the end if you want to save this model coefficients
-#saveRDS(best_model, "C:/Users/hrowe/Documents/FHWA mobility trend report/T4 - Forecasting/Year 2/FHWA_Mobility_Trends/Year 2 County Level/modeling/Modeling/champion_TMS_y2_1_10_24.rds")
 
 best_model <- readRDS(paste(dirname(getwd()),"/2. Modeling/Modeling/champion_GHG_y2_2_16_24.rds", sep = ''))
 
@@ -153,21 +151,22 @@ forecast_data = forecast_data1[,c("Pop.Linear",
                                   "Lane.Miles.1",
                                   "Telework.1",
                                   "Transit",
-                                  "Driver.Rev.Baseline",
                                   "Courier.Baseline",
+                                  "Driver.Rev.Baseline",
                                   "POPDENSITY",
                                   "YEAR",
                                   "FIPS")]
 
-colnames(forecast_data) <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES"
-                             ,"TELEWORK","UPT_distr_commuters","DRIVER_NONEMP_RCPTOT_REAL","COURIER_NONEMP_RCPTOT_REAL","POP_DENSITY", "YEAR", "Full_FIPS_Code")
+colnames(forecast_data) <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK",
+                             "UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY", "YEAR", "Full_FIPS_Code")
 forecast_data[is.na(forecast_data)] <- 0
 
 ####
 forecast_data <- drop_na(forecast_data[,c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES"
-                                          ,"TELEWORK","UPT_distr_commuters","DRIVER_NONEMP_RCPTOT_REAL","COURIER_NONEMP_RCPTOT_REAL","POP_DENSITY", "Full_FIPS_Code", "YEAR")]) #removed year and gems geotype
+                                          ,"TELEWORK","UPT_distr_commuters","COURIER_NONEMP_RCPTOT_REAL","DRIVER_NONEMP_RCPTOT_REAL","POP_DENSITY", "Full_FIPS_Code", "YEAR")]) #removed year and gems geotype
 
 forecast_data$Unemployment_Rate <- forecast_data$Unemployment_Rate / 100
+forecast_data$DRIVER_NONEMP_RCPTOT_REAL <- forecast_data$DRIVER_NONEMP_RCPTOT_REAL/100
 
 # make copy of year and for later
 forecast_data_year <- subset(forecast_data, select=c(YEAR))
