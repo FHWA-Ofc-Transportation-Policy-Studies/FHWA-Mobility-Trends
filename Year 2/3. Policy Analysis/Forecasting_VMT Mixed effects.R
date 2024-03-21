@@ -1,3 +1,14 @@
+
+# FHWA Mobility Trends Year 2 Forecasting Script - VMT
+# Date: March 20, 2024
+# Software Version: 1.1.0
+# Creator Name: Helena Rowe and Zach Pate
+# Summary: This script takes the champion models for respective performance 
+#          metrics and utilizes indicator forecast to build county level forecast
+#          through 2050. 
+#         1.1.0: Improved variable naming and comments
+
+
 library(car)
 library(caret)
 library(tidyr)
@@ -11,79 +22,71 @@ library(omnibus)
 #clear workspace
 rm(list = setdiff(ls(), lsf.str()))
 
-#load in the data you want to use 
-df <- read.csv(paste(dirname(getwd()),"/2. Modeling/Data/County_Year2_2_16_2024.csv", sep = ''))
-
 ##### Final VMT Model (run on 2/16/24)
 #set the list of indicators you want to work with
-indicators <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK",
-                "UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY")
+df_all_data <- read.csv(paste(dirname(getwd()),"/Data/County_Year2_2_16_2024.csv", sep = ''))
+indicators <- c("POPULATION","True_GDP","Unemployment_Rate", "Charging_Stations","LNMILES","TELEWORK","UPT_distr_commuters", "COURIER_NONEMP_RCPTOT_REAL", "DRIVER_NONEMP_RCPTOT_REAL", "POP_DENSITY")
 non_indicator_var <- c("Full_FIPS_Code", "YEAR", "County_Type")
-y <-  "VMT" #set your dependent variable #"TOTAL_EMISSIONS", "TMS"
+performance_metric <-  "VMT" #set your dependent variable #"TOTAL_EMISSIONS", "TMS"
 train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
-remove_y_zeros <- TRUE #(set to FLASE if preferred to keep zeros in)
+remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 
 best_model <- readRDS(paste(dirname(getwd()),"/2. Modeling/Modeling/champion_VMT_y2_2_16_24.rds", sep = ''))
 
 round(coef(best_model), digits = 4)
 #################################### Structure #################################
 
+
 #setting seed value
 set.seed(102)
 
 #grab data and drop all NA 
-df <- drop_na(df[,c(indicators, y, non_indicator_var)])
+df_na_droped <- drop_na(df_all_data[,c(indicators, performance_metric, non_indicator_var)])
 
 #remove cases where y is zero, depending on parameter given in the inputs section
 if(remove_y_zeros){
-  df <- df %>% 
-    filter(!!sym(y) != 0) #replace VMT with y if we want this to work for all performance measures
+  df_na_droped <- df_na_droped %>% 
+    filter(!!sym(performance_metric) != 0) #replace VMT with y if we want this to work for all performance measures
 }
 
 # make copy of year and for later
-df_year <- subset(df, select=c(YEAR))
-df_county_type <- subset(df, select=c(County_Type))
-
+df_year_subset <- subset(df_na_droped, select=c(YEAR))
+df_county_type_subset <- subset(df_na_droped, select=c(County_Type))
 
 #one_hot encode data
-df$Full_FIPS_Code <- as.factor(df$Full_FIPS_Code)
-unique_FIPS <- unique(df$Full_FIPS_Code)
-
-dum <- dummyVars(" ~ Full_FIPS_Code", data = df)
-counties_onehot <- data.frame(predict(dum, newdata = df))
-df <- cbind(df, counties_onehot)
+df_na_droped$Full_FIPS_Code <- as.factor(df_na_droped$Full_FIPS_Code)
+dum_variables <- dummyVars(" ~ Full_FIPS_Code", data = df_na_droped)
+counties_onehot <- data.frame(predict(dum_variables, newdata = df_na_droped))
+df_one_hot_encoded <- cbind(df_na_droped, counties_onehot)
 
 #log convert all data (even rates, as it helps with skew and uniformity of data)
-all_var <- c(y, indicators)
+all_var <- c(performance_metric, indicators)
 log_var <- paste("LOG", all_var, sep ="")
 log_y <- log_var[1]
 for (a in all_var){
-  temp <- log(df[[a]] + 1)
+  temp <- log(df_one_hot_encoded[[a]] + 1)
   title <- paste("LOG", a, sep ="")
-  df[title] <- temp
+  df_one_hot_encoded[title] <- temp
 }
 
 #removing non log transformed indicators and performance measure
-df <- df[ , -which(names(df) %in% c(indicators, y))]
+df_modeling <- df_one_hot_encoded[ , -which(names(df_one_hot_encoded) %in% c(indicators, performance_metric))]
 
 # Min-max scaling the data 
-process <- preProcess(as.data.frame(df), method=c("range"))
-norm_scale <- predict(process, as.data.frame(df))
+process <- preProcess(as.data.frame(df_modeling), method=c("range"))
+norm_scale <- predict(process, as.data.frame(df_modeling))
 
-norm_scale_colnames <- colnames(norm_scale)
 
 #adding back year, county type, and pre-min max scaled performance measure
-norm_scale[["YEAR"]] <- as.numeric(df[["YEAR"]])
-norm_scale[["County_Type"]] <- df[["County_Type"]]
-norm_scale[[log_y]] <- df[[log_y]]
-
+norm_scale[["YEAR"]] <- as.numeric(df_one_hot_encoded[["YEAR"]])
+norm_scale[["County_Type"]] <- df_one_hot_encoded[["County_Type"]]
+norm_scale[[log_y]] <- df_one_hot_encoded[[log_y]]
 
 #initializing df to hold results from n trials
 var_and_eval <- c(log_var[-1], "r2_test", "rmse_norm_test")
 df_n_trials <- data.frame(matrix(ncol = length(var_and_eval), nrow = 0))
 colnames(df_n_trials) <- var_and_eval
-
 
 #train test split
 smp_size <- floor(train_percent * nrow(norm_scale))
@@ -142,9 +145,9 @@ write.csv(subset(norm_scale, select = c(Full_FIPS_Code, YEAR, County_Type, Log_p
 
 #transforing forecast data for prediction
 #baseline
-forecast_data1 <- read.csv(paste(getwd(),"/Model Data/Forecast_Data 1_16_2024.csv", sep = ''))
+forecast_data_raw <- read.csv(paste(getwd(),"/Model Data/Forecast_Data 1_16_2024.csv", sep = ''))
 
-forecast_data = forecast_data1[,c("Pop.Linear",
+forecast_data = forecast_data_raw[,c("Pop.Linear",
                                   "Real.GDP", 
                                   "Unemployment.MA",
                                   "EV.1",
@@ -173,12 +176,12 @@ forecast_data_year <- subset(forecast_data, select=c(YEAR))
 
 #one_hot encode data
 forecast_data$Full_FIPS_Code <- as.factor(forecast_data$Full_FIPS_Code)
-dum <- dummyVars(" ~ Full_FIPS_Code", data = forecast_data)
-counties_onehot <- data.frame(predict(dum, newdata = forecast_data))
+dum_variables <- dummyVars(" ~ Full_FIPS_Code", data = forecast_data)
+counties_onehot <- data.frame(predict(dum_variables, newdata = forecast_data))
 forecast_data <- cbind(forecast_data, counties_onehot)
 
 #log convert all data (even rates, as it helps with skew and uniformity of data)
-all_var <- c(y, indicators)
+all_var <- c(performance_metric, indicators)
 log_var <- paste("LOG", all_var, sep ="")
 log_y <- log_var[1]
 for (a in all_var){
