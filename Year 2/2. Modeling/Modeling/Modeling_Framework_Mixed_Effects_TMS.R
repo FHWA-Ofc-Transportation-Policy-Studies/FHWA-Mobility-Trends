@@ -23,8 +23,6 @@ library(omnibus)
 
 #################################### Inputs to edit #################################
 
-#Only run the section associated with the model you're interested in creating.
-#(For example, for the VMT model, run lines 23-30, then skip to Structure section)
 #clear workspace
 rm(list = setdiff(ls(), lsf.str()))
 
@@ -175,6 +173,15 @@ for (x in 1:n) {
   
 }
 
+#Writing results of each row to csv
+all_preds <- predict(best_model, as.matrix(select(norm_scale, -one_of(c(log_y, non_indicator_var)))))
+norm_scale$Log_predictions <- all_preds
+norm_scale$Predictions <- exp(norm_scale$Log_predictions)
+write.csv(subset(norm_scale, select = c(Full_FIPS_Code, YEAR, County_Type, Log_predictions, Predictions,
+                                        LOGTRANSIT_USER_COUNT,LOGPOPULATION,LOGTrue_GDP,LOGUnemployment_Rate,LOGCharging_Stations,
+                                        LOGLNMILES, LOGTELEWORK, LOGcapital_transit_funding, LOGCOURIER_NONEMP_RCPTOT_REAL, LOGDRIVER_NONEMP_RCPTOT_REAL,
+                                        LOGPOP_DENSITY)), 'Transit_Users_Modeling_results.csv')
+
 
 
 #visualize the coefficient values and evaluation metrics from n trails 
@@ -193,17 +200,17 @@ symbol_log_y <- sym(log_y)
 ggplot(test,aes(x=!!symbol_log_y,y=preds,group=County_Type))+
   geom_point(aes(color=County_Type)) +
   geom_abline(slope=1, intercept= 0) + 
-  ggtitle(paste(y ,'Mixed-effects Pred vs Test'))
+  ggtitle(paste('LOGTransitUsers Mixed-effects Pred vs Test'))
 
 ggplot(test,aes(x=!!symbol_log_y,y=preds,group=County_Type))+
   geom_point(aes(color=County_Type)) +
   geom_abline(slope=1, intercept= 0) + 
-  ggtitle(paste(y ,'Mixed-effects Pred vs Test')) +
+  ggtitle(paste('LOGTransitUsers Mixed-effects Pred vs Test')) +
   facet_wrap(~County_Type)
 
 ggplot(test, aes(x = resids, colour = County_Type)) +
   geom_density()+
-  ggtitle(paste('Log(', y, ') Test Residual Distribution', sep = "" ))+
+  ggtitle(paste('LogTransitUsers Test Residual Distribution', sep = "" ))+
   theme_classic()
 
 test1 <- test %>% 
@@ -214,25 +221,25 @@ test1 <- test %>%
 ggplot(test1,aes(x=!!symbol_log_y,y=preds,group=geo_type))+
   geom_point(aes(shape=geo_type, color = geo_type)) +
   geom_abline(slope=1, intercept= 0) + 
-  ggtitle(paste(y ,'Mixed-effects Pred vs Test'))
+  ggtitle(paste('TransitUsers Mixed-effects Pred vs Test'))
 
-qqPlot(test$resids, main = paste('Log(', y, ') Mixed-effects qqplot', sep = "" ))
-hist(test$resids, main = paste("Distribution of Test Residuals for Log(", y, ")", sep = ""))
+qqPlot(test$resids, main = paste('Log(TransitUsers) Mixed-effects qqplot', sep = "" ))
+hist(test$resids, main = paste("Distribution of Test Residuals for Log(TransitUsers)", sep = ""))
 
 
 #train residual visuals
 ggplot(test,aes(x=!!symbol_log_y,y=resids, group=County_Type))+  
   geom_point(aes(color=County_Type)) +
   geom_abline(slope=0, intercept= 0) + 
-  ggtitle(paste(y ,'Test Residual Analysis')) 
+  ggtitle(paste('TransitUsers Test Residual Analysis')) 
 
 ggplot(test,aes(x=!!symbol_log_y,y=resids, group=County_Type))+  
   geom_point(aes(color=County_Type)) +
   geom_abline(slope=0, intercept= 0) + 
-  ggtitle(paste(y ,'Test Residual Analysis')) +
+  ggtitle(paste('TransitUsers Test Residual Analysis')) +
   facet_wrap(~County_Type)
 
-hist(train$resids, main = paste("Distribution of Training Residuals for Log(", y, ")", sep = ""))
+hist(train$resids, main = paste("Distribution of Training Residuals for Log(TransitUsers)", sep = ""))
 
 
 #additional model evaluation metrics, especially helpful for comparing multiple models against one another 
@@ -257,4 +264,3 @@ comparisson_metrics_df
 df_outliers <- test %>% 
   select(Full_FIPS_Code, YEAR, County_Type, resids, preds) %>% 
   filter((resids > 2) | (resids < -2) )
-
