@@ -52,8 +52,7 @@ df_na_droped <- drop_na(df_all_data[,c(indicators, performance_metric, non_indic
 
 #remove cases where y is zero, depending on parameter given in the inputs section
 if(remove_y_zeros){
-  df_na_droped <- df_na_droped %>% 
-    filter(!!sym(performance_metric) != 0) #replace VMT with y if we want this to work for all performance measures
+  df_na_droped <- subset(df_na_droped, performance_metric > 0)#replace VMT with y if we want this to work for all performance measures
 }
 
 # make copy of year and for later
@@ -261,9 +260,5 @@ comparisson_metrics_df <- data.frame(performance_measure = c("Degrees of Freedom
                                      value = (c(k, AICc, BIC, r2_adj,est_perc_var_w_ceoff)) )
 comparisson_metrics_df
 
-
-#checking for outliers 
-df_outliers <- test %>% 
-  select(Full_FIPS_Code, YEAR, County_Type, resids, preds) %>% 
-  filter((resids > 2) | (resids < -2) )
-
+#checking for outliers
+df_outliers = subset(test, abs(resids) > 2, select = c(Full_FIPS_Code, County_Type, resids, preds))

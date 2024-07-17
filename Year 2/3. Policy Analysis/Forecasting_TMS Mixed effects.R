@@ -22,9 +22,6 @@ library(omnibus)
 #clear workspace
 rm(list = setdiff(ls(), lsf.str()))
 
-#load in the data you want to use 
-df <- read.csv(paste(dirname(getwd()),"/2. Modeling/Data/County_Year2_2_16_2024.csv", sep = ''))
-
 ##### Final TMS Model (run on 2/16/24)
 #load in the data you want to use 
 df_all_data <- read.csv(paste(dirname(getwd()),"/Data/County_Year2_2_16_2024.csv", sep = ''))
@@ -38,7 +35,7 @@ remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 #df <- df[!(df$distributed_UPT == 0),] #optional to remove 0s for UPT (remove counties without transit systems, assume only counties with transit systems have a relationship with TMS)
 df_all_data <- df_all_data %>% filter(County_Type == 'Metropolitan') #creating a model only for metro counties
 
-best_model <- readRDS(paste(dirname(getwd()),"/2. Modeling/Modeling/champion_TMS_y2_2_16_24.rds", sep = ''))
+best_model <- readRDS(paste(dirname(getwd()),"/Modeling/champion_TMS_y2_2_16_24.rds", sep = ''))
 
 round(coef(best_model), digits = 4)
 #################################### Structure #################################
@@ -51,8 +48,7 @@ df_na_droped <- drop_na(df_all_data[,c(indicators, performance_metric, non_indic
 
 #remove cases where y is zero, depending on parameter given in the inputs section
 if(remove_y_zeros){
-  df_na_droped <- df_na_droped %>% 
-    filter(!!sym(performance_metric) != 0) #replace VMT with y if we want this to work for all performance measures
+  df_na_droped <- subset(df_na_droped, performance_metric > 0)#replace VMT with y if we want this to work for all performance measures
 }
 
 # make copy of year and for later

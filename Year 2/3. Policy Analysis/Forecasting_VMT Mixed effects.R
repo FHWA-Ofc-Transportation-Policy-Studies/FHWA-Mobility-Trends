@@ -32,7 +32,7 @@ train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
 remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 
-best_model <- readRDS(paste(dirname(getwd()),"/2. Modeling/Modeling/champion_VMT_y2_2_16_24.rds", sep = ''))
+best_model <- readRDS(paste(dirname(getwd()),"/Modeling/champion_VMT_y2_2_16_24.rds", sep = ''))
 
 round(coef(best_model), digits = 4)
 #################################### Structure #################################
@@ -46,8 +46,7 @@ df_na_droped <- drop_na(df_all_data[,c(indicators, performance_metric, non_indic
 
 #remove cases where y is zero, depending on parameter given in the inputs section
 if(remove_y_zeros){
-  df_na_droped <- df_na_droped %>% 
-    filter(!!sym(performance_metric) != 0) #replace VMT with y if we want this to work for all performance measures
+  df_na_droped <- subset(df_na_droped, performance_metric != 0)#replace VMT with y if we want this to work for all performance measures
 }
 
 # make copy of year and for later
