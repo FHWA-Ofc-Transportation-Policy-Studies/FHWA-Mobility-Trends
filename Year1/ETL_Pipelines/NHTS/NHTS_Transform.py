@@ -20,7 +20,7 @@ from glob import glob
 #from sqlalchemy.dialects import registry
 #registry.register('snowflake', 'snowflake.sqlalchemy', 'dialect')
 
-data_path = 'fhwa-dataengineering-zp-vol-1/Data/NHTS/'
+data_path = 'C:/Users/zapate/Desktop/SNOWFLAKE_DATA/NHTS/'
 
 file_dictionary = {
     "household": ['NHTS_2017/hhpub.csv', 'NHTS_2009/Ascii/HHV2PUB.CSV', 'NHTS_2001/HHPUB.csv'],

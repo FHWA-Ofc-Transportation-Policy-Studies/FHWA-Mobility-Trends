@@ -13,15 +13,13 @@ import time
 import requests
 import urllib
 import zipfile
-from munch import munchify
 import pprint
 from tqdm import tqdm
 from glob import glob
-from platforms.connect.snowpy import SnowPy
 
 #Set path to where data will be stored (This path will be different for each user unless we transfer data volumes)
 #Will need to make a folder if doesn't exist
-data_path = "fhwa-dataengineering-zp-vol-1/Data/CES/"
+data_path = "C:/Users/zapate/Desktop/SNOWFLAKE_DATA/CES/"
 
 # Define class for Progress Bar
 class DownloadProgressBar(tqdm):
@@ -46,11 +44,12 @@ def diary_or_interview_path(diary_or_interview, last_two_digit_year, data_path):
     
     returns:
         url can be used for download, path
+
     '''
     if diary_or_interview == 'interview':
-        url = "https://www.bls.gov/cex/pumd/data/comma/intrvw" + str(last_two_digit_year) + ".zip"
+        url = "https://www.bls.gov/cex/pumd/data/sas/intrvw" + str(last_two_digit_year) + ".zip"
     elif diary_or_interview == 'diary':
-        url = "https://www.bls.gov/cex/pumd/data/comma/diary" + str(last_two_digit_year) + ".zip"
+        url = "https://www.bls.gov/cex/pumd/data/sas/diary" + str(last_two_digit_year) + ".zip"
 
     path = data_path + diary_or_interview + str(last_two_digit_year) + ".zip"
     
@@ -60,8 +59,8 @@ def diary_or_interview_path(diary_or_interview, last_two_digit_year, data_path):
 #These years can be updated for different ranges. Since Python range() stops at number before 'stop' argument, need to add 1 to last year of survey. 
 #below diary years are 1980-1981, 1990-2021, interview years 1980-1981, 1984-2021
 
-diary_years = list(range(1980, 1982)) + list(range(1990, 2022))
-interview_years = list(range(1980, 1982)) + list(range(1984, 2022)) 
+diary_years = list(range(1980, 1982)) + list(range(1990, 2024))
+interview_years = list(range(1980, 1982)) + list(range(1984, 2024)) 
 
 #remove comment out to download
 
@@ -93,6 +92,7 @@ def uncompress(filepath):
 #sit in the data lake not in use. 
 for i in tqdm(range(len(diary_years))):
     last_digits = str(diary_years[i])[2:]
+    print(data_path + "diary" + last_digits + ".zip" )
     uncompress(data_path + "diary" + last_digits + ".zip")
     os.remove(data_path + "diary" + last_digits + ".zip")
 

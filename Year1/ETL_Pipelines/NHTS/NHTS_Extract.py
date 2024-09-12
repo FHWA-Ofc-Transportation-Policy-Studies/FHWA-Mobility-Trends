@@ -15,9 +15,8 @@ import zipfile
 import pprint
 from tqdm import tqdm
 from glob import glob
-from platforms.connect.snowpy import SnowPy
 
-data_path = 'fhwa-dataengineering-zp-vol-1/Data/NHTS/'
+data_path = 'C:/Users/zapate/Desktop/SNOWFLAKE_DATA/NHTS'
 
 class DownloadProgressBar(tqdm):
     def update_to(self, b=1, bsize=1, tsize=None):

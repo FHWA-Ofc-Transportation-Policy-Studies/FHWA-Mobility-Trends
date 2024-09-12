@@ -212,10 +212,9 @@ ggplot(test, aes(x = resids, colour = County_Type)) +
   ggtitle(paste('LogVMT Test Residual Distribution', sep = "" ))+
   theme_classic()
 
-test1 <- test %>% 
-  select(symbol_log_y, preds, County_Type) %>% 
-  mutate(geo_type = ifelse(County_Type == 'Metropolitan', 'Urban', 'Rural')) %>% 
-  select(symbol_log_y, preds, geo_type)
+test1 <- test[c('LOGVMT', 'preds', 'County_Type')]
+test1$geo_type <- ifelse(test1$County_Type == 'Metropolitan', 'Urban', 'Rural')
+test1 <- test1[c('LOGVMT', 'preds', 'geo_type')]
 
 ggplot(test1,aes(x=!!symbol_log_y,y=preds,group=geo_type))+
   geom_point(aes(shape=geo_type, color = geo_type)) +
