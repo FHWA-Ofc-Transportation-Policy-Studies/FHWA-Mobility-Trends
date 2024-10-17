@@ -30,11 +30,14 @@ non_indicator_var <- c("Full_FIPS_Code", "YEAR", "County_Type")
 performance_metric <-  "VMT" #set your dependent variable #"TOTAL_EMISSIONS", "TMS"
 train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
-remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
+#remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
+df_all_data <- df_all_data[df_all_data$VMT  > 0,]
 
 best_model <- readRDS(paste(dirname(getwd()),"/Modeling/champion_VMT_y2_2_16_24.rds", sep = ''))
 
 round(coef(best_model), digits = 4)
+
+
 #################################### Structure #################################
 
 
@@ -45,9 +48,10 @@ set.seed(102)
 df_na_droped <- drop_na(df_all_data[,c(indicators, performance_metric, non_indicator_var)])
 
 #remove cases where y is zero, depending on parameter given in the inputs section
-if(remove_y_zeros){
-  df_na_droped <- subset(df_na_droped, performance_metric != 0)#replace VMT with y if we want this to work for all performance measures
-}
+#if(remove_y_zeros){
+#  df_na_droped <- subset(df_na_droped, performance_metric > 0)#replace VMT with y if we want this to work for all performance measures
+#}
+
 
 # make copy of year and for later
 df_year_subset <- subset(df_na_droped, select=c(YEAR))

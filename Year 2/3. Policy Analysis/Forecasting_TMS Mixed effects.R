@@ -38,6 +38,8 @@ df_all_data <- df_all_data %>% filter(County_Type == 'Metropolitan') #creating a
 best_model <- readRDS(paste(dirname(getwd()),"/Modeling/champion_TMS_y2_2_16_24.rds", sep = ''))
 
 round(coef(best_model), digits = 4)
+df_all_data <- df_all_data[df_all_data$TRANSIT_USER_COUNT  > 0,]
+
 #################################### Structure #################################
 
 #setting seed value

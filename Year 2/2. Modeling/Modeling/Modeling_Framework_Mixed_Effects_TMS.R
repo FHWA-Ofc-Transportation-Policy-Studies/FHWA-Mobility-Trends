@@ -38,6 +38,7 @@ n = 1 #define number of model trials you want to run
 remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 #df <- df[!(df$distributed_UPT == 0),] #optional to remove 0s for UPT (remove counties without transit systems, assume only counties with transit systems have a relationship with TMS)
 df_all_data <- df_all_data %>% filter(County_Type == 'Metropolitan') #creating a model only for metro counties
+df_all_data <- df_all_data[df_all_data$TRANSIT_USER_COUNT  > 0,]
 
 #run this at the end if you want to save this model coeff
 #saveRDS(best_model, "Champion_TMS_y2_2_16_24.rds")

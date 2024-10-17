@@ -38,6 +38,7 @@ performance_metric <-  "TOTAL_EMISSIONS" #set your dependent variable
 train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
 remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
+df_all_data <- df_all_data[df_all_data$TOTAL_EMISSIONS  > 0,]
 
 #run this at the end if you want to save this model coeff
 #saveRDS(best_model, "Champion_GHG_y2_2_16_24.rds")

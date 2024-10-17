@@ -36,11 +36,11 @@ non_indicator_var <- c("Full_FIPS_Code", "YEAR", "County_Type")
 performance_metric <-  "VMT" #set your dependent variable #"TOTAL_EMISSIONS", "TMS"
 train_percent <- 0.7 #set the percent of data you want to use in the train set
 n = 1 #define number of model trials you want to run
-remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
+#remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 
 #run this at the end if you want to save this model coeff
 #saveRDS(best_model, "Champion_VMT_y2_2_16_24.rds")
-
+df_all_data <- df_all_data[df_all_data$VMT  > 0,]
 #################################### Structure #################################
 
 #setting seed value

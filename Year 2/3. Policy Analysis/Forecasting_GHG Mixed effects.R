@@ -37,6 +37,8 @@ remove_y_zeros <- TRUE #(set to FALSE if preferred to keep zeros in)
 best_model <- readRDS(paste(dirname(getwd()),"/Modeling/champion_GHG_y2_2_16_24.rds", sep = ''))
 
 round(coef(best_model), digits = 4)
+df_all_data <- df_all_data[df_all_data$TOTAL_EMISSIONS  > 0,]
+
 #################################### Structure #################################
 
 #setting seed value
